@@ -37,20 +37,21 @@ class GPS():
             self.Timestamp = msg.timestamp
             
             if msg.lat_dir == "W":
-                self.Lat = "-" + msg.lat # -8.0000
+                self.Lat = "-" + str(msg.lat) # -8.0000
             else:
-                self.Lat = "+" + msg.lat # +8.0123
+                self.Lat = "+" + str(msg.lat) # +8.0123
 
             if msg.lon_dir == "S":
                 self.Lon = "-" + msg.lon
             else:
                 self.Lon = "+" + msg.lon
 
-            self.Altitude = msg.altitude + msg.altitude_units
+            self.Altitude = str(msg.altitude) + str(msg.altitude_units)
             self.Satellites = msg.num_sats
             ## OK return
             return 0 
 
         else:
             ## GPS has lose the conection
-            return -1  
+            return -1   
+
