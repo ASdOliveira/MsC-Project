@@ -35,16 +35,18 @@ class GPS():
         if readline.find('GGA') > 0:
             msg = pynmea2.parse(readline)
             self.Timestamp = msg.timestamp
-            
-            if msg.lat_dir == "W":
-                self.Lat = "-" + str(msg.lat) # -8.0000
-            else:
-                self.Lat = "+" + str(msg.lat) # +8.0123
+            msg.Lat = self.__fixCoordinates(msg.lat)
+            msg.Lon = self.__fixCoordinates(msg.lon)
 
-            if msg.lon_dir == "S":
-                self.Lon = "-" + msg.lon
+            if msg.lat_dir == "S":
+                self.Lat = "-" + str(msg.Lat) # -8.0000
             else:
-                self.Lon = "+" + msg.lon
+                self.Lat = "+" + str(msg.Lat) # +8.0123
+
+            if msg.lon_dir == "W":
+                self.Lon = "-" + str(msg.Lon)
+            else:
+                self.Lon = "+" + str(msg.Lon)
 
             self.Altitude = str(msg.altitude) + str(msg.altitude_units)
             self.Satellites = msg.num_sats
@@ -54,4 +56,20 @@ class GPS():
         else:
             ## GPS has lose the conection
             return -1   
+
+    def __fixCoordinates(self,coordinates):
+        
+        integerPart = float(coordinates)/100
+        integerPart = str(integerPart)
+        x = integerPart.split(".")
+
+        parteInteira = int(x[0])
+        outraParte = x[1]
+        minutos = outraParte[:2]
+        minutosParteII = outraParte[2:]
+        outraParte = float(minutos + "." + minutosParteII)/60
+
+        final = parteInteira + outraParte
+        final = float("{0:.5f}".format(final))
+        return final
 
