@@ -11,9 +11,12 @@ import pynmea2
 #serial port to connect with GPS board
 port = "/dev/serial0"
 
-class GPS():
-    def __init__(self):
+
+class GPS(): 
+    def __init__(self,precisionNumber=4):
         self.TimeZone = -3
+        #digits after "," precision
+        self.precisionNumber = precisionNumber 
         #main infos returned from GPS board
         self.Timestamp = "0"
         self.Lat = "0"
@@ -21,6 +24,7 @@ class GPS():
         self.Altitude = "0"
         self.Satellites = "0"
         self.Timestamp = "0"
+        self.Velocidade = "0"
 
         global serialPort
         #Initializing a serial connection
@@ -53,6 +57,11 @@ class GPS():
             ## OK return
             return 0 
 
+        elif readline.find('VTG') > 0:
+            velocidadeGPS = readline.split(",")
+            #velocity in Km/h
+            self.Velocidade = str(velocidadeGPS[7])
+
         else:
             ## GPS has lose the conection
             return -1   
@@ -70,6 +79,6 @@ class GPS():
         outraParte = float(minutos + "." + minutosParteII)/60
 
         final = parteInteira + outraParte
-        final = float("{0:.5f}".format(final))
+        final = float("{0:.{1}f}".format(final,self.precisionNumber))
         return final
 
