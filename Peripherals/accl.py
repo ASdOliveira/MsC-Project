@@ -2,7 +2,7 @@ from I2C_driver import *
 import time
 
 
-ADDRESS = 0x1D
+
 
 #registers
 STATUS = 0x00
@@ -162,12 +162,3 @@ class acelerometer:
 
         return position
 
-acelerometro = acelerometer(ADDRESS)
-
-while True:
-    acelerometro.read()
-    position = acelerometro.readPosition()
-    print (position)
-    #print(str(acelerometro.x) + " " + str(acelerometro.y) + " " + str(acelerometro.z))
-    
-    time.sleep(0.3)
