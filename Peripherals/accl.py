@@ -146,7 +146,7 @@ class acelerometer:
 
     def readPosition(self):
         regVal = self.i2c.read_data(PL_STATUS)
-        if((regVal & 0x40) == 1):
+        if(regVal & 0x40):
             position = "Flat"
         else:
             regVal = (regVal & 0x06) >> 1
